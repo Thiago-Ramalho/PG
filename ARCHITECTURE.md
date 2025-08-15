@@ -103,6 +103,7 @@ graph TD;
         MESH["🧊 Mesh"];
         OBJ_READER["📑 ObjReader"];
         COLORMAP["🌈 ColorMap"];
+        BEZIER_SURFACE["➰ BezierSurface"];
     end
 
     MESH --> OBJECT;

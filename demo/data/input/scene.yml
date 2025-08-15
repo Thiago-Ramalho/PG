@@ -53,6 +53,20 @@ definitions:
       ni: 1.52
       d: 0.05
 
+    vidro_fino: &vidro_fino
+      color: [0.7, 0.8, 0.1]
+      ka: [1.0, 1.0, 1.0]
+      ks: [0.1, 0.1, 0.1]
+      ns: 256
+      ni: 1.0
+      d: 0.7
+
+    superficie_bezier: &bezier_mat
+      color: [0.8, 0.3, 0.7]
+      ka: [0.8, 0.3, 0.7]
+      ks: [0.4, 0.4, 0.4]
+      ns: 128
+
 # --- Configurações da Câmera ---
 camera:
   image_width: 800
@@ -60,17 +74,17 @@ camera:
   screen_distance: 1.5
   viewport_width: 2.0
   viewport_height: 2.0
-  lookfrom: [278, 278, -800]
+  lookfrom: [278, 278, -600]
   lookat: [278, 278, 0]
   vup: [0, 1, 0]
 
 # --- Fontes de Luz ---
 lights:
   - name: Luz do Teto
-    position: [278, 548, 278]
+    position: [278, 548, 0]
     color: [1.0, 1.0, 1.0]
   - name: Flash da Câmera
-    position: [278, 278, -800]
+    position: [278, 378, -800]
     color: [0.5, 0.5, 0.5]
 
 # --- Objetos na Cena ---
@@ -129,15 +143,44 @@ objects:
       - type: translation
         vector: [370, 82.5, 150]
 
-  # ESFERAS COM POSIÇÃO AJUSTADA (AINDA MAIS PERTO)
-  - name: Esfera de Vidro
-    type: sphere
-    center: [380, 90, -140]  # Z foi de 120 para 80
-    radius: 90
-    material: *vidro
+  # # ESFERAS COM POSIÇÃO AJUSTADA (AINDA MAIS PERTO)
+  # - name: Esfera de Vidro
+  #   type: sphere
+  #   center: [380, 90, -140]  # Z foi de 120 para 80
+  #   radius: 90
+  #   material: *vidro
 
-  - name: Esfera de Espelho
-    type: sphere
-    center: [180, 90, -200] # Z foi de 180 para 100
-    radius: 90
-    material: *espelho
+  # - name: Esfera de Espelho
+  #   type: sphere
+  #   center: [180, 90, 200] # Z foi de 180 para 100
+  #   radius: 90
+  #   material: *espelho
+
+  # SUPERFÍCIE DE BÉZIER DECORATIVA
+  - name: Superficie Bezier Ondulada
+    type: bezier_surface
+    material: *vidro_fino
+    control_points:
+      # Grade 4x4 de pontos de controle (superfície cúbica) - mais próxima da câmera
+      # Linha 0 (v=0)
+      - - [200, 200, -100]  # [u=0,v=0]
+        - [250, 220, -80]   # [u=1,v=0] 
+        - [300, 240, -80]   # [u=2,v=0]
+        - [350, 220, -100]  # [u=3,v=0]
+      # Linha 1 (v=1)
+      - - [200, 180, -150]  # [u=0,v=1]
+        - [250, 200, -120]  # [u=1,v=1]
+        - [300, 220, -120]  # [u=2,v=1]
+        - [350, 200, -150]  # [u=3,v=1]
+      # Linha 2 (v=2)
+      - - [200, 160, -200]  # [u=0,v=2]
+        - [250, 180, -180]  # [u=1,v=2]
+        - [300, 200, -180]  # [u=2,v=2]
+        - [350, 180, -200]  # [u=3,v=2]
+      # Linha 3 (v=3)
+      - - [200, 140, -250]  # [u=0,v=3]
+        - [250, 160, -230]  # [u=1,v=3]
+        - [300, 180, -230]  # [u=2,v=3]
+        - [350, 160, -250]  # [u=3,v=3]
+    u_segments: 20
+    v_segments: 20

@@ -12,6 +12,7 @@
 #include "Prism/objects/plane.hpp"
 #include "Prism/objects/sphere.hpp"
 #include "Prism/objects/triangle.hpp"
+#include "Prism/objects/bezier_surface.hpp"
 #include "Prism/scene/camera.hpp"
 
 #include <cmath>
@@ -208,6 +209,35 @@ Scene SceneParser::parse() {
                 auto mesh_ptr = static_cast<Mesh*>(object.get());
                 mesh_ptr->setMaterial(material);
             }
+        } else if (type == "bezier_surface") {
+            // Parse control points grid
+            if (!obj_node["control_points"]) {
+                throw std::runtime_error("Bezier surface requires 'control_points' field");
+            }
+            
+            std::vector<std::vector<Point3>> control_points;
+            const YAML::Node& cp_node = obj_node["control_points"];
+            
+            for (size_t i = 0; i < cp_node.size(); ++i) {
+                std::vector<Point3> row;
+                const YAML::Node& row_node = cp_node[i];
+                for (size_t j = 0; j < row_node.size(); ++j) {
+                    row.push_back(parsePoint(row_node[j]));
+                }
+                control_points.push_back(row);
+            }
+            
+            // Use default segment counts for rendering
+            int u_segments = 20;
+            int v_segments = 20;
+            if (obj_node["u_segments"]) {
+                u_segments = obj_node["u_segments"].as<int>();
+            }
+            if (obj_node["v_segments"]) {
+                v_segments = obj_node["v_segments"].as<int>();
+            }
+            
+            object = std::make_unique<BezierSurface>(control_points, material, u_segments, v_segments);
         } else {
             Style::logWarning("Unknown object type: " + type + ". Skipping this object.");
             continue;

@@ -17,6 +17,7 @@
 #include "Prism/objects/plane.hpp"
 #include "Prism/objects/sphere.hpp"
 #include "Prism/objects/triangle.hpp"
+#include "Prism/objects/bezier_surface.hpp"
 #endif // PRISM_BUILD_OBJECTS
 
 #ifdef PRISM_BUILD_SCENE

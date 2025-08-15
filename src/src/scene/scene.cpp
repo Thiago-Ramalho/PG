@@ -199,7 +199,7 @@ void Scene::render() const {
     int last_progress_percent = -1;
 
     for (Ray const& ray : camera_) {
-        image_file << trace(ray, 5) << '\n';
+        image_file << trace(ray, 2) << '\n';
 
         pixels_done++;
         int current_progress_percent =
