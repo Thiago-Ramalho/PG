@@ -84,8 +84,8 @@ Point3 BezierSurface::evaluateAt(double u, double v) const {
     // Clamp parameters to valid range instead of throwing
     u = std::max(0.0, std::min(1.0, u));
     v = std::max(0.0, std::min(1.0, v));
-    
-    Point3 result(0, 0, 0);
+
+    Vector3 result = Vector3(0, 0, 0);
     int n = u_count - 1; // degree in u direction
     int m = v_count - 1; // degree in v direction
     
@@ -98,11 +98,11 @@ Point3 BezierSurface::evaluateAt(double u, double v) const {
             // Convert Point3 to Vector3, multiply by weight, then back to Point3
             Vector3 point_vec(control_points[j][i]);
             Vector3 weighted_vec = point_vec * weight;
-            result = result + Point3(weighted_vec);
+            result = result + weighted_vec;
         }
     }
     
-    return result;
+    return Point3(result);
 }
 
 Vector3 BezierSurface::normalAt(double u, double v) const {
@@ -153,8 +153,8 @@ double BezierSurface::bernstein(int i, int n, double t) const {
     }
     
     double coeff = static_cast<double>(binomial(n, i));
-    double term1 = std::pow(t, i);
-    double term2 = std::pow(1.0 - t, n - i);
+    double term1 = std::pow(1.0 - t, n - i);
+    double term2 = std::pow(t, i);
     
     return coeff * term1 * term2;
 }
